@@ -7,9 +7,40 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
+var resultado = "";
+
 class _HomeState extends State<Home> {
   TextEditingController controllerAlcool = TextEditingController();
   TextEditingController controllerGasolina = TextEditingController();
+
+  void calcular() {
+    double? precoAlcool = double.tryParse(controllerAlcool.text);
+    double? precoGasolina = double.tryParse(controllerGasolina.text);
+
+    if (precoAlcool == null || precoGasolina == null) {
+      setState(() {
+        resultado =
+            "Número invalido, digite números maiores que 0 e utilizando (.) no lugar de (,)";
+      });
+    } else {
+      if ((precoAlcool / precoGasolina) >= 0.7) {
+        setState(() {
+          resultado = "Melhor abastecer com gasolina!";
+        });
+      } else {
+        setState(() {
+          resultado = "Melhor abastecer com alcool!";
+        });
+      }
+    }
+
+    limpar();
+  }
+
+  void limpar() {
+    controllerAlcool.text = "";
+    controllerGasolina.text = "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +92,7 @@ class _HomeState extends State<Home> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: calcular,
                 child: Text("Calcular"),
                 style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
@@ -75,7 +106,7 @@ class _HomeState extends State<Home> {
             Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text(
-                "Resultado",
+                resultado,
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
